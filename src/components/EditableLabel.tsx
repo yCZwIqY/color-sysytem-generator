@@ -13,16 +13,16 @@ const EditableLabel = ({name, onChange}: EditableLabelProps) => {
     const onClick = (e) => {
         onChange(inputValue);
         setIsEditMode(false);
-        setInputValue(name);
     }
 
     return <div>
         {isEditMode ? <div className={'flex flex-col gap-2'}>
                 <Input value={inputValue}
-                       containerClassName={'w-full'}
+                       className={'w-24'}
                        onBlur={onClick}
+                       style={{all: 'revert-layer'}}
                        onChange={e => setInputValue(e.target.value)}/>
-            <Button className={'bg-violet-300 font-bold rounded-md'} onClick={onClick}>수정</Button>
+            <Button className={'border border-violet-300 font-bold rounded-md justify-center text-violet-300 '} onClick={onClick}>수정</Button>
             </div>
             : <div onClick={() => setIsEditMode(true)}>{name}</div>}
 
