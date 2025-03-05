@@ -9,7 +9,7 @@ const EditableLabel = ({name, onChange}: EditableLabelProps) => {
     const [inputValue, setInputValue] = useState(name);
     const [isEditMode, setIsEditMode] = useState(false);
 
-    const onClick = (e) => {
+    const onClick = () => {
         onChange(inputValue);
         setIsEditMode(false);
     }

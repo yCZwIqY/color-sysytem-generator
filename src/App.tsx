@@ -17,17 +17,17 @@ const App = () => {
     const [showNotice, setShowNotice] = useState(false);
     const noticeKey = useRef('');
 
-    const hexToRgb = (hex) => {
+    const hexToRgb = (hex: string): [number, number, number] => {
         hex = hex.replace(/^#/, "");
-        let bigint = parseInt(hex, 16);
+        const bigint = parseInt(hex, 16);
         return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
     }
 
-    const rgbToHex = ([r, g, b]) => {
+    const rgbToHex = ([r, g, b]: number[]) => {
         return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase()}`;
     }
 
-    const adjustBrightness = ([r, g, b], factor, isBrighter) => {
+    const adjustBrightness = ([r, g, b]: number[], factor: number, isBrighter: boolean) => {
         return isBrighter
             ? [
                 Math.min(255, Math.round(r + (255 - r) * factor)),
@@ -41,7 +41,7 @@ const App = () => {
             ];
     }
 
-    const generateColorScale = (baseHex, minFactor = 1.4, maxFactor = 0.6): string[] => {
+    const generateColorScale = (baseHex: string): string[] => {
         const baseRgb = hexToRgb(baseHex);
 
         if (baseHex.toUpperCase() === "#000000") {
@@ -85,7 +85,7 @@ const App = () => {
                 isBrighter = false;
             }
 
-            scale.push(rgbToHex(adjustBrightness(baseRgb, factor, isBrighter)));
+            scale.push(rgbToHex(adjustBrightness(baseRgb as [number, number, number], factor, isBrighter)));
         }
 
         return scale;
@@ -125,7 +125,10 @@ const App = () => {
 
     const onRemove = (targetKey: string) => {
         const newColors = Object.fromEntries(
-            Object.entries(colors).filter(([key, value]) => targetKey !== key)
+            Object.entries(colors).filter((color) => {
+                const [key] = color;
+                return targetKey !== key
+            })
         );
         setColors(newColors as ColorMap);
     }
