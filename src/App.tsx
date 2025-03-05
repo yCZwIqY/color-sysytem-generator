@@ -1,8 +1,8 @@
 import Header from "./components/Header.tsx";
-import {Button, CloseIcon, Input} from "jy-headless";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import ColorBox from "./components/ColorBox.tsx";
 import EditableLabel from "./components/EditableLabel.tsx";
+import {Alert, Button, Input, Snackbar} from "@mui/material";
 
 interface ColorMap {
     [key: string]: string[]
@@ -11,7 +11,12 @@ interface ColorMap {
 const App = () => {
     const [inputValue, setInputValue] = useState<string>('');
     const [colors, setColors] = useState<ColorMap>({});
-    const [errorMsg, setErrorMsg] = useState<string>('')
+    const [errorMsg, setErrorMsg] = useState<string>('');
+    const lastNum = useRef(0);
+    const [noticeMessage, setNoticeMessage] = useState('');
+    const [showNotice, setShowNotice] = useState(false);
+    const noticeKey = useRef('');
+
     const hexToRgb = (hex) => {
         hex = hex.replace(/^#/, "");
         let bigint = parseInt(hex, 16);
@@ -73,10 +78,10 @@ const App = () => {
             let isBrighter;
 
             if (step < 500) {
-                factor = (500 - step) / 500; // 50 → 0.9, 100 → 0.8, ..., 400 → 0.2
+                factor = (500 - step) / 500;
                 isBrighter = true;
             } else {
-                factor = (900 - step) / 500 + 0.1; // 600 → 0.75, 700 → 0.5, 900 → 0.0
+                factor = (900 - step) / 500 + 0.1;
                 isBrighter = false;
             }
 
@@ -89,24 +94,25 @@ const App = () => {
 
     const onClickAdd = () => {
         if (!inputValue) {
-            setErrorMsg('값을 입력해주세요');
+            setErrorMsg('Please enter a value.');
             return;
         }
         if (!/^#?[0-9A-Fa-f]{6}$/.test(inputValue)) {
-            setErrorMsg('색상 값이 아닙니다.')
+            setErrorMsg('It\'s not the Hex code value.')
             return;
         }
 
-        setErrorMsg('')
+        setErrorMsg('');
         setColors(prev => ({
             ...prev,
-            [`color-0${Object.keys(colors).length}`]: generateColorScale(`#${inputValue.replace('#', '')}`)
-        }))
+            [`color-${lastNum.current}`]: generateColorScale(`#${inputValue.replace('#', '')}`)
+        }));
+        lastNum.current++
     }
 
     const onChangeColorName = (targetIdx: number, newName: string) => {
         if (Object.keys(colors).find(key => key === newName)) {
-            alert('이미 존재하는 이름 입니다.');
+            alert('The name already exists.');
             return;
         }
         const newColors = Object.fromEntries(
@@ -124,52 +130,76 @@ const App = () => {
         setColors(newColors as ColorMap);
     }
 
-    const copyToJson = async () => {
+    const copyToJson = () => {
         const result = `{\t\n${Object.keys(colors).map((key) => {
             return `\t'${key}': {\n${colors[key].map((color, idx) => `\t\t${(idx + 1) * 100}: '${color}',`).join('\n')}\n\t}`
         }).join(',\n')}\n}`
 
-        await navigator.clipboard.writeText(result);
+        showCopySuccessNotice(result);
+    }
+
+    const showCopySuccessNotice = async (text: string) => {
+        await navigator.clipboard.writeText(text);
+        noticeKey.current = text;
+        setShowNotice(true);
+        setNoticeMessage('Copy Success');
     }
 
     return (
         <>
             <Header/>
             <main className={'max-w-[1200px] mx-auto'}>
-                <div className={'flex justify-center mb-12'}>
+                <div className={'flex justify-center mb-18'}>
                     <input value={`#${inputValue.replace('#', '')}`}
                            className={'w-20 h-10 border-none outline-none block rounded-md shadow-md'}
                            onChange={e => setInputValue(e.target.value)}
                            type={'color'}/>
-                    <Input value={inputValue} onChange={e => setInputValue(e.target.value)}
-                           error={<div className={'absolute top-[100%] text-red-600'}>{errorMsg}</div>}
-                           showError={!!errorMsg}
-                           className={'text-black'}
-                           containerClassName={`border ${errorMsg ? 'border-red-600' : 'border-black'} rounded-md px-2 py-1`}/>
-                    <Button className={'px-6 py-2 bg-violet-300 font-bold rounded-md mx-2 text-white'}
+                    <div className={'relative'}>
+                        <Input value={inputValue} onChange={e => setInputValue(e.target.value)}
+                               className={`${errorMsg ? 'border-red-600' : 'border-black'} rounded-md mx-2 px-2 py-1`}/>
+                        {errorMsg && <Alert className={'absolute mt-2 w-full'} variant="outlined" severity="error">
+                            {errorMsg}
+												</Alert>}
+                    </div>
+                    <Button className={'px-6 py-2  font-bold rounded-md mx-2 text-white '}
+                            variant="outlined"
                             onClick={onClickAdd}
-                    > 추가 </Button>
+                    > Add </Button>
                 </div>
                 <div>
                     {Object.keys(colors).map((key, idx) =>
-                        <div className={'flex my-2 gap-2 items-center'}>
+                        <div key={key} className={'flex my-2 gap-3 items-center mb-4'}>
                             <div className={'w-24'}>
                                 <EditableLabel name={key} onChange={(newValue) => onChangeColorName(idx, newValue)}/>
                             </div>
                             {colors[key].map((color, idx2) =>
-                                <ColorBox colorName={key} color={color} idx={idx2}/>)}
-                            <Button className={'p-2 bg-red-300 font-bold rounded-md mx-2 text-white'}
+                                <ColorBox showCopySuccessNotice={showCopySuccessNotice} colorName={key} color={color} idx={idx2}/>)}
+                            <Button color="error"
+                                    className={'p-2 bg-red-300 font-bold rounded-md mx-2 text-white'}
                                     onClick={() => onRemove(key)}
-                            > <CloseIcon color={'white'}/> </Button>
+                            > Remove </Button>
                         </div>
                     )}
                 </div>
                 <div className={'flex justify-end mt-12'}>
-                    <Button className={'p-2 bg-violet-300 font-bold rounded-md mx-2 text-white'}
+                    <Button className={'p-2 font-bold rounded-md mx-2 text-white'}
+                            variant="outlined"
                             onClick={() => copyToJson()}
-                    > Json 으로 복사하기 </Button>
+                    >Copy in Json </Button>
                 </div>
             </main>
+            <Snackbar
+                open={showNotice}
+                autoHideDuration={10000}
+                key={noticeKey.current}
+                onClose={() => setShowNotice(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert style={{background: 'white'}}
+                       severity="success" variant="outlined" onClose={() => setShowNotice(false)}>
+                    {noticeMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }

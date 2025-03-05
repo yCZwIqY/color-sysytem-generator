@@ -1,6 +1,5 @@
 import {useState} from "react";
-import {Button, Input} from "jy-headless";
-
+import {Button, Input} from "@mui/material";
 interface EditableLabelProps {
     name: string;
     onChange: (newValue: string) => void;
@@ -22,7 +21,8 @@ const EditableLabel = ({name, onChange}: EditableLabelProps) => {
                        onBlur={onClick}
                        style={{all: 'revert-layer'}}
                        onChange={e => setInputValue(e.target.value)}/>
-            <Button className={'border border-violet-300 font-bold rounded-md justify-center text-violet-300 '} onClick={onClick}>수정</Button>
+            <Button variant="outlined"
+                    onClick={onClick}>Edit</Button>
             </div>
             : <div onClick={() => setIsEditMode(true)}>{name}</div>}
 
