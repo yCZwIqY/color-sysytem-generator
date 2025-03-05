@@ -1,6 +1,6 @@
 # 🎨 Color System Generator
 
-![image](https://github.com/user-attachments/assets/e8a4ea58-7734-4a73-ba53-2f533b8877c0)
+![image](https://github.com/user-attachments/assets/93ddf5bb-ee9f-4439-9e30-62d2343530c1)
 https://color-sysytem-generator.vercel.app/<br/>
 
 **유사한 색상을 찾고, 맞춤형 색상 팔레트를 쉽게 생성하세요!**
