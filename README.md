@@ -1,54 +1,24 @@
-# React + TypeScript + Vite
+# 🎨 Color System Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**유사한 색상을 찾고, 맞춤형 색상 팔레트를 쉽게 생성하세요!**
 
-Currently, two official plugins are available:
+## 🔹 소개
+**Color System Generator**는 **HEX 색상 코드**를 기반으로 **유사한 색상을 자동 생성**하는 도구입니다.  
+디자이너, 개발자, 브랜드 기획자 등 다양한 분야에서 활용할 수 있습니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ 주요 기능
+✅ **HEX 기반 유사색 생성**  
+✅ **100 ~ 900 단계의 색상 스케일 지원**  
+✅ **원클릭 HEX 값 복사 기능**<br/>
+✅ **빠르고 직관적인 UI**
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 시작하기
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+### 🔧 설치 방법 (로컬 실행)
+```sh
+git clone https://github.com/yCZwIqY/color-sysytem-generator.git
+cd color-system-generator
+npm install
+npm run dev
