@@ -2,7 +2,9 @@ import Header from "./components/Header.tsx";
 import {useRef, useState} from "react";
 import ColorBox from "./components/ColorBox.tsx";
 import EditableLabel from "./components/EditableLabel.tsx";
-import {Alert, Button, Input, Snackbar} from "@mui/material";
+import {Alert, Box, Button, Container, Input, Snackbar} from "@mui/material";
+import Footer from "./components/Footer.tsx";
+import { Analytics } from "@vercel/analytics/react"
 
 interface ColorMap {
     [key: string]: string[]
@@ -149,48 +151,71 @@ const App = () => {
     }
 
     return (
-        <>
+        <Box display="flex" flexDirection="column" minHeight="100vh">
             <Header/>
-            <main className={'max-w-[1200px] mx-auto'}>
-                <div className={'flex justify-center mb-18'}>
+            <Container component="main"  sx={{ flex: 1,my: 10, mx: 'auto'}}>
+                <Box display={'flex'} gap={'12px'} justifyContent={'center'} sx={{marginBottom: 8}}>
                     <input value={`#${inputValue.replace('#', '')}`}
-                           className={'w-20 h-10 border-none outline-none block rounded-md shadow-md'}
+                           style={{
+                               color: `#${inputValue.replace('#', '')}`,
+                               width: '40px',
+                               height: '40px',
+                               borderRadius: '100px',
+                               border: 'none',
+                               outline:'none',
+                           }}
                            onChange={e => setInputValue(e.target.value)}
                            type={'color'}/>
-                    <div className={'relative'}>
-                        <Input value={inputValue} onChange={e => setInputValue(e.target.value)}
-                               className={`${errorMsg ? 'border-red-600' : 'border-black'} rounded-md mx-2 px-2 py-1`}/>
-                        {errorMsg && <Alert className={'absolute mt-2 w-full'} variant="outlined" severity="error">
-                            {errorMsg}
-												</Alert>}
-                    </div>
-                    <Button className={'px-6 py-2  font-bold rounded-md mx-2 text-white '}
-                            variant="outlined"
+                    <Box position={'relative'}>
+                        <Input sx={{fontFamily: '양진체'}} value={inputValue} onChange={e => setInputValue(e.target.value)}/>
+                        {errorMsg &&
+                          <Box position={'absolute'} marginTop={'10px'}>
+                            <Alert variant="outlined" severity="error">
+                                {errorMsg}
+                            </Alert>
+                          </Box>}
+                    </Box>
+                    <Button variant="outlined"
+                            sx={{
+                                paddingY: '8px',
+                                fontWeight: 'Bold',
+                                borderRadius: '20px',
+                                fontFamily: '양진체'
+                            }}
                             onClick={onClickAdd}
                     > Add </Button>
-                </div>
-                <div>
+                </Box >
+                <Box display={'flex'} flexDirection={'column'} gap={4}>
                     {Object.keys(colors).map((key, idx) =>
-                        <div key={key} className={'flex my-2 gap-3 items-center mb-4'}>
-                            <div className={'w-24'}>
-                                <EditableLabel name={key} onChange={(newValue) => onChangeColorName(idx, newValue)}/>
-                            </div>
+                        <Box key={key} display={'flex'} marginTop={'2px'} marginBottom={'4px'} gap={'15px'} alignItems={'center'}>
+                            <EditableLabel name={key} onChange={(newValue) => onChangeColorName(idx, newValue)}/>
                             {colors[key].map((color, idx2) =>
                                 <ColorBox showCopySuccessNotice={showCopySuccessNotice} colorName={key} color={color} idx={idx2}/>)}
                             <Button color="error"
-                                    className={'p-2 bg-red-300 font-bold rounded-md mx-2 text-white'}
+                                    sx={{
+                                        p: '10px',
+                                        borderRadius: '20px',
+                                        margin: '0 4px',
+                                        marginTop: '-25px',
+                                        fontFamily: '양진체'
+                                    }}
                                     onClick={() => onRemove(key)}
                             > Remove </Button>
-                        </div>
+                        </Box>
                     )}
-                </div>
-                <div className={'flex justify-end mt-12'}>
-                    <Button className={'p-2 font-bold rounded-md mx-2 text-white'}
+                </Box>
+                <Box display={'flex'} justifyContent={'center'} marginY={'48px'}>
+                    <Button sx={{
+                        paddingY: '8px',
+                        fontWeight: 'Bold',
+                        borderRadius: '20px',
+                        fontFamily: '양진체'
+                    }}
                             variant="outlined"
                             onClick={() => copyToJson()}
                     >Copy in Json </Button>
-                </div>
-            </main>
+                </Box>
+            </Container>
             <Snackbar
                 open={showNotice}
                 autoHideDuration={10000}
@@ -203,7 +228,9 @@ const App = () => {
                     {noticeMessage}
                 </Alert>
             </Snackbar>
-        </>
+            <Footer/>
+            <Analytics/>
+        </Box>
     )
 }
 
