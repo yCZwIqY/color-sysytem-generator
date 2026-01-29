@@ -1,10 +1,10 @@
-import Header from "./components/Header.tsx";
-import {useRef, useState} from "react";
-import ColorBox from "./components/ColorBox.tsx";
-import EditableLabel from "./components/EditableLabel.tsx";
-import {Alert, Box, Button, Container, Input, Snackbar} from "@mui/material";
-import Footer from "./components/Footer.tsx";
-import { Analytics } from "@vercel/analytics/react"
+import Header from './components/Header.tsx';
+import { useRef, useState } from 'react';
+import ColorBox from './components/ColorBox.tsx';
+import EditableLabel from './components/EditableLabel.tsx';
+import { Alert, Box, Button, Container, Input, Snackbar } from '@mui/material';
+import Footer from './components/Footer.tsx';
+import { Analytics } from '@vercel/analytics/react';
 
 interface ColorMap {
     [key: string]: string[]
@@ -79,15 +79,18 @@ const App = () => {
             let factor;
             let isBrighter;
 
-            if (step < 500) {
-                factor = (500 - step) / 500;
-                isBrighter = true;
+            if (step === 500) {
+                scale.push(baseHex.toUpperCase());
             } else {
-                factor = (900 - step) / 500 + 0.1;
-                isBrighter = false;
+                if (step < 500) {
+                    factor = (500 - step) / 500;
+                    isBrighter = true;
+                } else {
+                    factor = (900 - step) / 500 + 0.1;
+                    isBrighter = false;
+                }
+                scale.push(rgbToHex(adjustBrightness(baseRgb as [number, number, number], factor, isBrighter)));
             }
-
-            scale.push(rgbToHex(adjustBrightness(baseRgb as [number, number, number], factor, isBrighter)));
         }
 
         return scale;
@@ -142,6 +145,13 @@ const App = () => {
 
         showCopySuccessNotice(result);
     }
+
+    const copyToCss = () => {
+        const result = `@theme {\n${Object.keys(colors).map((key) =>
+          colors[key].map((color, idx) => `\t--color-${key}-${(idx + 1) * 100}: '${color}';\n`).join(''),
+        ).join('\n\n')}\n}`;
+        showCopySuccessNotice(result);
+    };
 
     const showCopySuccessNotice = async (text: string) => {
         await navigator.clipboard.writeText(text);
@@ -204,7 +214,10 @@ const App = () => {
                         </Box>
                     )}
                 </Box>
-                <Box display={'flex'} justifyContent={'center'} marginY={'48px'}>
+                <Box display={'flex'}
+                     justifyContent={'center'}
+                     marginY={'48px'}
+                     sx={{ gap: '10px' }}>
                     <Button sx={{
                         paddingY: '8px',
                         fontWeight: 'Bold',
@@ -214,6 +227,15 @@ const App = () => {
                             variant="outlined"
                             onClick={() => copyToJson()}
                     >Copy in Json </Button>
+                    <Button sx={{
+                        paddingY: '8px',
+                        fontWeight: 'Bold',
+                        borderRadius: '20px',
+                        fontFamily: '양진체',
+                    }}
+                            variant='outlined'
+                            onClick={() => copyToCss()}
+                    >Copy in CSS </Button>
                 </Box>
             </Container>
             <Snackbar
