@@ -2,7 +2,7 @@ import Header from './components/Header.tsx';
 import { useRef, useState } from 'react';
 import ColorBox from './components/ColorBox.tsx';
 import EditableLabel from './components/EditableLabel.tsx';
-import { Alert, Box, Button, Container, Input, Snackbar } from '@mui/material';
+import { Alert, Box, Button, Container, Input, Snackbar, Typography } from '@mui/material';
 import Footer from './components/Footer.tsx';
 import { Analytics } from '@vercel/analytics/react';
 
@@ -163,6 +163,17 @@ const App = () => {
     return (
         <Box display="flex" flexDirection="column" minHeight="100vh">
             <Header/>
+            <Box sx={{ mb: 3, p: 10 }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                    • 입력된 컬러를 기반으로 일관된 컬러 스케일을 자동 생성합니다.
+                </Typography>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                    • 색상 이름을 클릭하여 컬러 스케일의 이름을 변경할 수 있습니다.
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    • Tailwind CSS 3/4 설정 파일에 바로 복사하여 사용 가능합니다.
+                </Typography>
+            </Box>
             <Container component="main"  sx={{ flex: 1,my: 10, mx: 'auto'}}>
                 <Box display={'flex'} gap={'12px'} justifyContent={'center'} sx={{marginBottom: 8}}>
                     <input value={`#${inputValue.replace('#', '')}`}
@@ -220,22 +231,20 @@ const App = () => {
                      sx={{ gap: '10px' }}>
                     <Button sx={{
                         paddingY: '8px',
-                        fontWeight: 'Bold',
                         borderRadius: '20px',
                         fontFamily: '양진체'
                     }}
                             variant="outlined"
                             onClick={() => copyToJson()}
-                    >Copy in Json </Button>
+                    >Json으로 복사하기 (TailwindCSS 3)</Button>
                     <Button sx={{
                         paddingY: '8px',
-                        fontWeight: 'Bold',
                         borderRadius: '20px',
                         fontFamily: '양진체',
                     }}
                             variant='outlined'
                             onClick={() => copyToCss()}
-                    >Copy in CSS </Button>
+                    >CSS 로 복사하기 (TailwindCSS 4)</Button>
                 </Box>
             </Container>
             <Snackbar
