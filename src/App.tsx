@@ -163,7 +163,7 @@ const App = () => {
     return (
         <Box display="flex" flexDirection="column" minHeight="100vh">
             <Header/>
-            <Box sx={{ mb: 3, p: 10 }}>
+            <Box sx={{ mb: 3, p: 8 }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
                     • 입력된 컬러를 기반으로 일관된 컬러 스케일을 자동 생성합니다.
                 </Typography>
@@ -175,7 +175,7 @@ const App = () => {
                 </Typography>
             </Box>
             <Container component="main"  sx={{ flex: 1,my: 10, mx: 'auto'}}>
-                <Box display={'flex'} gap={'12px'} justifyContent={'center'} sx={{marginBottom: 8}}>
+                <Box display={'flex'} gap={'12px'} justifyContent={'center'} sx={{marginBottom: 8, flexWrap: 'wrap'}}>
                     <input value={`#${inputValue.replace('#', '')}`}
                            style={{
                                color: `#${inputValue.replace('#', '')}`,
