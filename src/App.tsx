@@ -148,7 +148,7 @@ const App = () => {
 
     const copyToCss = () => {
         const result = `@theme {\n${Object.keys(colors).map((key) =>
-          colors[key].map((color, idx) => `\t--color-${key}-${(idx + 1) * 100}: '${color}';\n`).join(''),
+          colors[key].map((color, idx) => `\t--color-${key}-${(idx + 1) * 100}: ${color};\n`).join(''),
         ).join('\n\n')}\n}`;
         showCopySuccessNotice(result);
     };
