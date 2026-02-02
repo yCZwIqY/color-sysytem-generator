@@ -161,7 +161,7 @@ const App = () => {
     }
 
     return (
-        <Box display="flex" flexDirection="column" minHeight="100vh">
+        <Box display="flex" flexDirection="column" minHeight="100vh" maxWidth="100vw" overflow="hidden">
             <Header/>
             <Box sx={{ mb: 3, p: 8 }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -208,7 +208,7 @@ const App = () => {
                 </Box >
                 <Box display={'flex'} flexDirection={'column'} gap={4}>
                     {Object.keys(colors).map((key, idx) =>
-                        <Box key={key} display={'flex'} marginTop={'2px'} marginBottom={'4px'} gap={'15px'} alignItems={'center'}>
+                        <Box key={key} display={'flex'} marginTop={'2px'} marginBottom={'4px'} gap={'15px'} alignItems={'center'} flexWrap={'wrap'}>
                             <EditableLabel name={key} onChange={(newValue) => onChangeColorName(idx, newValue)}/>
                             {colors[key].map((color, idx2) =>
                                 <ColorBox showCopySuccessNotice={showCopySuccessNotice} colorName={key} color={color} idx={idx2}/>)}
